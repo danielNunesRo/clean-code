@@ -28,6 +28,12 @@ export class UsuarioController {
 
     @Post('/create-prato')
     async function(@Query() {nome, preco, descricao}: {nome: string, preco: number, descricao: string}): Promise<{message: string}> {
+        const pratoExists = await this.repository.getPratoByName(nome);
+        if(pratoExists) {
+            console.error("O prato já existe no cardapio!")
+            throw Error('O prato já existe no cardapio');
+        }
+        
         return await this.repository.createPrato(nome, preco, descricao);
     }
 
